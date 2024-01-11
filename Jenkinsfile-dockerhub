@@ -21,28 +21,28 @@ pipeline {
             }
             steps {
               withSonarQubeEnv(credentialsId: 'sonar-cred', installationName: 'sonar') {
-                sh "${scannerHome}/bin/sonar-scanner"
+                bat "${scannerHome}/bin/sonar-scanner"
               }
             }
         }
         stage('Build docker image') {
             steps {  
-                sh 'docker build -t $APP_NAME:$BUILD_NUMBER .'
+                bat 'docker build -t $APP_NAME:$BUILD_NUMBER .'
             }
         }
         stage('login to dockerhub') {
             steps{
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                bat 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
         stage('Trivy Scan (Aqua)') {
             steps {
-                sh 'trivy image $APP_NAME:$BUILD_NUMBER'
+                bat 'trivy image $APP_NAME:$BUILD_NUMBER'
             }
        }
         stage('push image') {
             steps{
-                sh 'docker push $APP_NAME:$BUILD_NUMBER'
+                bat 'docker push $APP_NAME:$BUILD_NUMBER'
             }
         }
         stage('Trigger ManifestUpdate') {

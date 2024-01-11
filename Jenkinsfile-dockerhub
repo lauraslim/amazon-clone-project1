@@ -5,22 +5,22 @@ pipeline {
         timeout(time: 10, unit: 'MINUTES')
      }
     environment {
-    DOCKERHUB_CREDENTIALS = credentials('lauradocker')
+    DOCKERHUB_CREDENTIALS = credentials('docker-cred')
     APP_NAME = "lauradocker84/amazon1"
     }
     stages { 
         stage('SCM Checkout') {
             steps{
-           git branch: 'main', url: 'https://github.com/lauraslim/Amazon-clone-Dockerized.git'
+           git branch: 'main', url: 'https://github.com/lauraslim/amazon-clone-project1.git'
             }
         }
         // run sonarqube test
         stage('Run Sonarqube') {
             environment {
-                scannerHome = tool 'ibt-sonarqube';
+                scannerHome = tool 'scanner';
             }
             steps {
-              withSonarQubeEnv(credentialsId: 'ibt-sonar', installationName: 'IBT sonarqube') {
+              withSonarQubeEnv(credentialsId: 'ibt-sonar', installationName: 'sonar') {
                 sh "${scannerHome}/bin/sonar-scanner"
               }
             }
